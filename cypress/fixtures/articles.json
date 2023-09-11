@@ -1,0 +1,41 @@
+{
+    "articles": [
+        {
+            "slug": "AMCKSSfa-1850",
+            "title": "Title 1",
+            "description": "This is the description of Title 1",
+            "body": "This is the body of Title 1",
+            "tagList": [
+                "cypress"
+            ],
+            "createdAt": "2023-09-11T16:25:56.068Z",
+            "updatedAt": "2023-09-11T16:25:56.068Z",
+            "favorited": false,
+            "favoritesCount": 1,
+            "author": {
+                "username": "CyTestUser",
+                "bio": "2222",
+                "image": "https://i.stack.imgur.com/34AD2.jpg",
+                "following": false
+            }
+        },
+        {
+            "slug": "dasda-1850",
+            "title": "Title 2",
+            "description": "This is the description of Title 2",
+            "body": "This is the body of Title 2",
+            "tagList": [],
+            "createdAt": "2023-09-10T06:29:09.733Z",
+            "updatedAt": "2023-09-10T06:29:09.733Z",
+            "favorited": false,
+            "favoritesCount": 5,
+            "author": {
+                "username": "CyTestUser",
+                "bio": "2222",
+                "image": "https://i.stack.imgur.com/34AD2.jpg",
+                "following": false
+            }
+        }
+    ],
+    "articlesCount": 2
+}
