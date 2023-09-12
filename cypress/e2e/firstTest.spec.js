@@ -123,8 +123,8 @@ describe('Test with backend', () => {
 
 			// delete the article that was just created
 			cy.contains('Global Feed').click()	
-			cy.wait(3000)		
             cy.get('.article-preview').first().click()
+			cy.contains('Request from API').click()
             cy.get('.article-actions').contains('Delete Article').click()
 
 			// make a GET request and check that the article was actually deleted by checking title
