@@ -95,4 +95,54 @@ describe('Test with backend', () => {
 
 		cy.get('app-article-list button').eq(1).click().should('contain', '6')
 	})
+
+	it.only('delete a new article in global feed', () => {
+
+		const userCredentials = {
+			"user": {
+				"email": "artem.bondar16@gmail.com", 
+				"password": "CypressTest1"
+			}
+		}
+
+		const bodyRequest = {
+			"article": {
+				"tagList": [],
+				"title": "Request from API - 9122023",
+				"description": "API testing is easy",
+				"body": "This is the body"
+			}
+		}
+
+		// make an API request and grab the token for that user
+		cy.request('POST', 'https://api.realworld.io/api/users/login', userCredentials)
+		.its('body').then(body => {
+			const token = body.user.token
+
+			// once logged in, make a POST request to create a new article
+			cy.request({
+				url: 'https://api.realworld.io/api/articles/',
+				headers: { 'Authorization': 'Token ' + token },
+				method: 'POST',
+				body: bodyRequest
+			}).then (response => {
+				expect(response.status).to.equal(201)
+			})
+
+			// delete the article that was just created
+			cy.contains('Global Feed').click()	
+			cy.wait(3000)		
+            cy.get('.article-preview').first().click()
+            cy.get('.article-actions').contains('Delete Article').click()
+
+			// make a GET request and check that the article was actually deleted by checking title
+			cy.request({
+				url: 'https://api.realworld.io/api/articles?limit=10&offset=0',
+				headers: { 'Authorization': 'Token ' + token },
+				method: 'GET'
+			}).its('body').then( body => {
+				expect(body.articles[0].title).not.to.equal('Request from API - 9122023')
+			})
+		})
+	})
 })
