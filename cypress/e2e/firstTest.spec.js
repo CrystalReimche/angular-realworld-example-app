@@ -33,7 +33,7 @@ describe('Test with backend', () => {
 	})
 
 	
-	it('intercepting and modifying the request and response', () => {
+	it.skip('intercepting and modifying the request and response', () => {
 
 		// This will override .type('This is the description - 9112023') to "This is a modified description" when posting
 		// cy.intercept({method: 'POST', path: 'articles'}, (request) => {
@@ -96,14 +96,7 @@ describe('Test with backend', () => {
 		cy.get('app-article-list button').eq(1).click().should('contain', '6')
 	})
 
-	it.only('delete a new article in global feed', () => {
-
-		const userCredentials = {
-			"user": {
-				"email": "artem.bondar16@gmail.com", 
-				"password": "CypressTest1"
-			}
-		}
+	it('delete a new article in global feed', () => {
 
 		const bodyRequest = {
 			"article": {
@@ -115,9 +108,8 @@ describe('Test with backend', () => {
 		}
 
 		// make an API request and grab the token for that user
-		cy.request('POST', 'https://api.realworld.io/api/users/login', userCredentials)
-		.its('body').then(body => {
-			const token = body.user.token
+		// @token comes from commands.js file
+		cy.get('@token').then(token => {
 
 			// once logged in, make a POST request to create a new article
 			cy.request({
