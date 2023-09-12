@@ -4,7 +4,7 @@ describe('Test with backend', () => {
   
 	beforeEach('login to the app', () => {
 		// this mock data must be implemented before any API calls are made
-		cy.intercept('GET', 'https://api.realworld.io/api/tags', {fixture: 'mockTags.json'})
+		cy.intercept({method: 'GET', path: 'tags'}, {fixture: 'mockTags.json'})
 		cy.loginToApplication()
 	})
 
@@ -32,6 +32,40 @@ describe('Test with backend', () => {
 		})
 	})
 
+	
+	it('intercepting and modifying the request and response', () => {
+
+		// This will override .type('This is the description - 9112023') to "This is a modified description" when posting
+		// cy.intercept({method: 'POST', path: 'articles'}, (request) => {
+		// 	request.body.article.description = "This is a modified description"
+		// }).as('postArticle')
+
+		// This will grab the posted description and modify it
+		cy.intercept({method: 'POST', path: 'articles'}, (request) => {
+			request.reply( request => {
+				expect(request.body.article.description).to.equal("This is the description - 9112023")
+				request.body.article.description = "This is a modified description"
+			})
+			
+		}).as('postArticle')
+
+		// then you make the action
+		cy.contains('New Article').click()
+		cy.get('[formcontrolname="title"]').type('This is the title - 9112023')
+		cy.get('[formcontrolname="description"]').type('This is the description - 9112023')
+		cy.get('[formcontrolname="body"]').type('This is the body - 9112023')
+		cy.contains('Publish Article').click()
+
+		// then you make the assertion
+		// Cypress will automatically wait until the call is complete before looking into it
+		cy.wait('@postArticle').then(xhr => {
+			console.log(xhr)
+			expect(xhr.response.statusCode).to.equal(201)
+			expect(xhr.request.body.article.body).to.equal('This is the body - 9112023')
+			expect(xhr.response.body.article.description).to.equal('This is a modified description')
+		})
+	})
+
 	it('verify popular tags are displayed', () => {
 		cy.log('we logged in')
 		cy.get('.tag-list')
@@ -40,7 +74,7 @@ describe('Test with backend', () => {
 		.and('contain', 'testing')
 	})
 
-	it.only('verify global feed likes are counted', () => {
+	it('verify global feed likes are counted', () => {
 		// the * wildcard will accept any url that's after 'feed'
 		// last parameter is stubbing in dummy data
 		cy.intercept('GET', 'https://api.realworld.io/api/articles/feed*', {"articles":[],"articlesCount":0} )
