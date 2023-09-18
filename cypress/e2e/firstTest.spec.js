@@ -1,3 +1,8 @@
+// TO START THE LOCALHOST, RUN NPM START IN POWERSHELL TERMINAL
+// TO START CYPRESS, RUN NPX CYPRESS OPEN IN POWERSHELL TERMINAL
+// NAVIGATE TO http://localhost:4200/pages
+
+
 /// <reference types="cypress" />
 
 describe('Test with backend', () => {
